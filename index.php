@@ -9,7 +9,7 @@ define ('ROAD' , 'grey');
 function generateSVG() {
     $layout = generateRandomLayout();
     $mainRoad = generateMainRoad($layout);
-    $svg = '<svg width="150" height="150" xmlns="http://www.w3.org/2000/svg">';
+    $svg = '<svg viewBox="0 0 500 500" width="500" height="500" xmlns="http://www.w3.org/2000/svg">';
     $x = 0;
     $y = 0;
     foreach ($layout as $index => $color) {
@@ -300,9 +300,9 @@ function guessRightOfWay($mainRoad, $announce){
 
 
 
+echo generateSVG();
 echo "Punkte <span id='p'></span> - Highscore <span id='h'></span><br>";
 echo "<A href='".$url."' target='_blank'>Puzzle Url</A><br><hr>";
-echo generateSVG();
 $prio = guessRightOfWay($mainRoad, $announce);
 echo '<hr><pre>';
 print_r(
