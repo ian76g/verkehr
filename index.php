@@ -9,7 +9,7 @@ define ('ROAD' , 'grey');
 function generateSVG() {
     $layout = generateRandomLayout();
     $mainRoad = generateMainRoad($layout);
-    $svg = '<svg viewBox="0 0 500 500" width="500" height="500" xmlns="http://www.w3.org/2000/svg">';
+    $svg = '<svg viewBox="0 0 150 150" width="500" height="500" xmlns="http://www.w3.org/2000/svg">';
     $x = 0;
     $y = 0;
     foreach ($layout as $index => $color) {
@@ -20,7 +20,7 @@ function generateSVG() {
             $svg .= generateBicycleSVG($x, $y);
         } elseif ($index == 8) {
             $svg .= '<rect x="' . $x . '" y="' . $y . '" width="50" height="50" fill="' . $color . '"></rect>';
-            $svg .= insertTrafficSign($x, $y, $mainRoad);
+            $svg .= insertTrafficSign($x, $y, $mainRoad, $layout);
         } elseif ($index == 4) {
             $svg .= '<rect x="' . $x . '" y="' . $y . '" width="50" height="50" fill="' . $color . '"></rect>';
             // Zufällige Richtung für den Pfeil wählen
@@ -64,7 +64,7 @@ function announce($from, $to){
     $announce[$from] = $to;
 }
 
-function insertTrafficSign($x, $y, $mainRoad){
+function insertTrafficSign($x, $y, $mainRoad, $layout){
     $sign = '';
     $x_rand = rand(0,1);
     if(isset($_GET['sign'])){
@@ -73,10 +73,10 @@ function insertTrafficSign($x, $y, $mainRoad){
     storeData('sign', $x_rand);
     if($mainRoad) {
         if(in_array(7, $mainRoad)){
-            $sign = generateMainRoadSignSVG($x, $y, $mainRoad);
+            $sign = generateMainRoadSignSVG($x, $y, $mainRoad, $layout);
         } else {
-            if ($x_rand == 0) $sign = generateGiveWaySignSVG($x, $y, $mainRoad);
-            if ($x_rand == 1) $sign = generateStopSignSVG($x, $y, $mainRoad);
+            if ($x_rand == 0) $sign = generateGiveWaySignSVG($x, $y, $mainRoad, $layout);
+            if ($x_rand == 1) $sign = generateStopSignSVG($x, $y, $mainRoad, $layout);
         }
     }
     return $sign;
@@ -299,10 +299,14 @@ function guessRightOfWay($mainRoad, $announce){
 }
 
 
+echo "<h1>Punkte <span id='p'></span> - Highscore <span id='h'></span></h1>";
 
 echo generateSVG();
-echo "Punkte <span id='p'></span> - Highscore <span id='h'></span><br>";
-echo "<A href='".$url."' target='_blank'>Puzzle Url</A><br><hr>";
+$url = '?';
+foreach($puzzleId as $key=> $val){
+    $url.=$key.'='.$val.'&';
+}
+echo "<br><A href='".$url."' target='_blank'>Puzzle Url</A><br><hr>";
 $prio = guessRightOfWay($mainRoad, $announce);
 echo '<hr><pre>';
 print_r(
@@ -312,10 +316,6 @@ print_r(
         'prio'=>$prio
     )
 );
-$url = '?';
-foreach($puzzleId as $key=> $val){
-    $url.=$key.'='.$val.'&';
-}
 echo "<script> var data = JSON.parse('".json_encode($prio)."');
 var p=0;
 var h=0;
@@ -382,6 +382,12 @@ if(document.getElementById('stop') != undefined)
 document.getElementById('stop').addEventListener('click', function() {
     delete data['stop'];
     this.style.fill='green';
+});
+
+if(document.getElementById('stop2') != undefined)
+document.getElementById('stop2').addEventListener('click', function() {
+    delete data['stop'];
+    document.getElementById('stop').style.fill='green';
 });
 
 ";

@@ -1,17 +1,17 @@
 <?php
-function generateGiveWaySignSVG($x, $y, $mainRoad) {
+function generateGiveWaySignSVG($x, $y, $mainRoad, $layout) {
     $svg = '';
     $svg .= '<polygon points="' . ($x + 12.5) . ',' . ($y + 20) . ' ' . ($x+5) . ',' . ($y+5) . ' ' . ($x + 20) . ',' . ($y+5) . '" fill="white" stroke="red" stroke-width="2" />';
     $svg .= '';
-    $svg .= generateMainRoadAddOn($x, $y, $mainRoad);
+    $svg .= generateMainRoadAddOn($x, $y, $mainRoad, $layout);
     return $svg;
 }
 
-function generateMainRoadSignSVG($x, $y, $mainRoad) {
+function generateMainRoadSignSVG($x, $y, $mainRoad, $layout) {
     $svg = '';
     $svg .= '<rect x="' . ($x + 5) . '" y="' . ($y + 5) . '" width="15" height="15" fill="white" stroke="yellow" stroke-width="2" transform="rotate(45 ' . ($x + 12.5) . ' ' . ($y + 12.5) . ')" />';
     $svg .= '';
-    $svg .= generateMainRoadAddOn($x, $y, $mainRoad);
+    $svg .= generateMainRoadAddOn($x, $y, $mainRoad, $layout);
     return $svg;
 }
 function generateRandomLayout() {
@@ -37,7 +37,7 @@ function generateRandomLayout() {
     storeData('layout', $layoutString);
     return $layout;
 }
-function generateMainRoadAddOn($x, $y, $mainRoad) {
+function generateMainRoadAddOn($x, $y, $mainRoad, $layout) {
     $svg = '';
     // 1 3 5 7
     $mainRoadString = implode('', $mainRoad);
@@ -63,15 +63,27 @@ function generateMainRoadAddOn($x, $y, $mainRoad) {
         if($mainRoadString == '37') {
             $svg .= '<path d="M'.($x+2+5).','.(27.5+$y-2+5).' A7.5,7.5 0 0,1 '.($x+7.5+2+5).','.(35+$y-2+5).'" fill="none" stroke="black" stroke-width="2" />';
         }
+        if($layout[1]==ROAD && strpos($mainRoadString, '1') === false){
+            $svg .= '<rect  x="' . ($x+12) . '" y="' . ($y+27) . '" width="1" height="3" fill="black" />';
+        }
+        if($layout[7]==ROAD && strpos($mainRoadString, '7') === false){
+            $svg .= '<rect  x="' . ($x+12) . '" y="' . ($y+27+8) . '" width="1" height="3" fill="black" />';
+        }
+        if($layout[3]==ROAD && strpos($mainRoadString, '3') === false){
+            $svg .= '<rect  x="' . (5+$x+2) . '" y="' . ($y+31) . '" width="3" height="1" fill="black" />';
+        }
+        if($layout[5]==ROAD && strpos($mainRoadString, '5') === false){
+            $svg .= '<rect  x="' . (5+$x+10) . '" y="' . ($y+31) . '" width="3" height="1" fill="black" />';
+        }
     }
     return $svg;
 }
 
-function generateStopSignSVG($x, $y, $mainRoad) {
+function generateStopSignSVG($x, $y, $mainRoad, $layout) {
     $svg = '';
     $svg .= '<polygon id="stop" points="' . ($x + 8) . ',' . $y . ' ' . ($x + 17) . ',' . $y . ' ' . ($x + 24) . ',' . ($y + 7) . ' ' . ($x + 24) . ',' . ($y + 17) . ' ' . ($x + 17) . ',' . ($y + 24) . ' ' . ($x + 8) . ',' . ($y + 24) . ' ' . $x . ',' . ($y + 17) . ' ' . $x . ',' . ($y + 7) . '" fill="red" />';
-    $svg .= '<text x="' . ($x + 12.5) . '" y="' . ($y + 14) . '" font-family="Arial" font-size="7" fill="white" text-anchor="middle">STOP</text>';
-    $svg .= generateMainRoadAddOn($x, $y, $mainRoad);
+    $svg .= '<text id="stop2" x="' . ($x + 12.5) . '" y="' . ($y + 14) . '" font-family="Arial" font-size="7" fill="white" text-anchor="middle">STOP</text>';
+    $svg .= generateMainRoadAddOn($x, $y, $mainRoad, $layout);
     announce('stop','stop');
 
     return $svg;
