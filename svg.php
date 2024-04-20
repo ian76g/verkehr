@@ -93,7 +93,7 @@ function generateStopSignSVG($x, $y, $mainRoad, $layout) {
 function generateBicycleSVG($x, $y) {
     $svg = '';
     $svg .= '<rect id="car7" x="' . ($x+35) . '" y="' . ($y+10) . '" width="3" height="20" fill="white" />';
-    $svg .= '<rect x="' . ($x + 31) . '" y="' . ($y + 12) . '" width="11" height="2" fill="black" />';
+    $svg .= '<rect id="car7a" x="' . ($x + 31) . '" y="' . ($y + 12) . '" width="11" height="2" fill="black" />';
     $svg .= '';
     return $svg;
 }

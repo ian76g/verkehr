@@ -9,7 +9,7 @@ define ('ROAD' , 'grey');
 function generateSVG() {
     $layout = generateRandomLayout();
     $mainRoad = generateMainRoad($layout);
-    $svg = '<svg viewBox="0 0 150 150" width="500" height="500" xmlns="http://www.w3.org/2000/svg">';
+    $svg = '<svg viewBox="0 0 150 150" width="95%" height="95%" xmlns="http://www.w3.org/2000/svg">';
     $x = 0;
     $y = 0;
     foreach ($layout as $index => $color) {
@@ -330,6 +330,7 @@ function clickOn(id){
             document.getElementById('carpath'+id).style.display = 'none';
             delete data[id];
             if(id == 7){
+                document.getElementById('car7a').style.display = 'none';
                 setCookie('p', ++p, 4);
                 if(p>h) setCookie('h', p, 4);
                 //alert('Alles richtig! Jetzt darfst Du fahren');
@@ -375,6 +376,11 @@ document.getElementById('car5').addEventListener('click', function() {
 
 if(document.getElementById('car7') != undefined)
 document.getElementById('car7').addEventListener('click', function() {
+    clickOn(7);
+});
+
+if(document.getElementById('car7') != undefined)
+document.getElementById('car7a').addEventListener('click', function() {
     clickOn(7);
 });
 
